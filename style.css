@@ -60,7 +60,7 @@ font-family: 'Roboto', sans-serif; */
 .rechercheAppareils,
 .rechercheUstensiles {
     margin-right: 20px;
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
 .ingredients,
@@ -161,6 +161,52 @@ font-family: 'Roboto', sans-serif; */
 .ustensilesSelection,
 .ustensilsForSelection {
     background-color: #ED6454;
+}
+.tag{
+    display: flex;
+    width: 1380px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 30px;
+}
+
+.tagModal,.tagModal1,.tagModal2{
+  display: flex;
+  height: 40px;
+  color: #ffffff;
+  font-size: 14px;
+  border-radius: 5px;
+  align-items: center;
+  font-family: 'Lato', sans-serif;
+  position: relative;
+  margin-right: 20px;
+}
+
+.tagModal{
+    background-color: #3282F7;
+}
+
+.tagModal1{
+    background-color: #68D9A4;
+}
+
+.tagModal2{
+    background-color: #ED6454;
+}
+
+.titleTagModal{
+  margin-left: 20px;
+  margin-right: 50px;
+}
+
+.closeTagModal{
+    position: absolute;
+    background-color: #ffffff00;
+    border : none;
+    transform: translateY(-2px);
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .mainContainer {

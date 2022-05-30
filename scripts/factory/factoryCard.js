@@ -1,11 +1,12 @@
-import { recipes } from '../../data/recipes.js';
-
+// import { recipes } from '../../data/recipes.js';
+const cardContainer = document.querySelector('.cardRecette');
 
 /**
  * creation des cards
  */
 
  export function factoryCard(recipeArray) {
+    cardContainer.innerHTML = "";
     recipeArray.forEach(element => {
 
         /**
@@ -105,4 +106,4 @@ import { recipes } from '../../data/recipes.js';
     });
 
 }
-factoryCard(recipes);
+// factoryCard(recipes);

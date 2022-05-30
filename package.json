@@ -1,0 +1,22 @@
+{
+  "name": "les-petits-plats-code",
+  "version": "1.0.0",
+  "description": "lint for projet 7",
+  "main": "index.js",
+  "scripts": {
+    "test": "--fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thomasfouquereau/les-petits-plats-code.git"
+  },
+  "author": "Thomas Fouquereau",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Thomasfouquereau/les-petits-plats-code/issues"
+  },
+  "homepage": "https://github.com/Thomasfouquereau/les-petits-plats-code#readme",
+  "devDependencies": {
+    "eslint": "^8.15.0"
+  }
+}
