@@ -1,28 +1,50 @@
+/**
+ * importe les recettes depuis le fichier recipes.js
+ */
 import { recipes } from '../data/recipes.js';
+/**
+ * crée les cards des recettes
+ */
 import { factoryCard } from '../scripts/factory/factoryCard.js';
-//import { getInfoForTags } from '../scripts/factory/factoryTags.js';
+/**
+ * ouvre et ferme les tags
+ */
 import { openClose } from './utils/closeOpen.js';
+import {INGREDIENTS , APPLIANCE , USTENSILS} from "./utils/const.js";
 
-let tagList = [
-    {
-        value: "ail",
-        type: "ing"
-    },
-    {
-        value: "four",
-        type: "app"
-    }
-];
+/**
+ * @param {Array} recipeArray cree un array des recettes
+ */
+let tagList = [];
 
 const barreDeRecherche = document.querySelector('.barreDeRecherche');
+
+/**
+ * 
+ * @param {*} arr tabelau de tags
+ * @param {*} requete input de la barre de recherche
+ * @returns le rsultat de la recherche dans les tags
+ */
 
 const filtreTexte = (arr, requete) => {
     return arr.filter(el => el.toLowerCase().indexOf(requete.toLowerCase()) !== -1);
 }
 
+/**
+ * 
+ * @param {*} recipeArr tableau de recettes
+ * @param {*} requete input de la barre de recherche
+ * @returns le resultat de la recherche en fonction du titre, de la description et des ingredients
+ */
+
 const filtreTexte2 = (recipeArr, requete) => {
-    return recipeArr.filter(recipe => recipe.name.toLowerCase().includes(requete.toLowerCase()) || recipe.description.toLowerCase().includes(requete.toLowerCase()));
+    return recipeArr.filter(recipe => recipe.name.toLowerCase().includes(requete.toLowerCase()) || recipe.description.toLowerCase().includes(requete.toLowerCase()) || recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(requete.toLowerCase())));
 }
+
+/**
+ * function de recherche 
+ * @param {*} recherche input de barre de recherche
+ */
 
 function recherche(recherche) {
     recherche.addEventListener('input', () => {
@@ -35,11 +57,17 @@ function recherche(recherche) {
                 alert('Aucun résultat');
             }
             return resultat
-        } 
+        }
     });
 }
 
 recherche(barreDeRecherche);
+
+/**
+ * 
+ * @param {*} recipeArray  tableau de recettes
+ * @returns un tableau de tags ingredient sans doublons et trié et normalisé
+ */
 
 function generateTags(recipeArray) {
     let tags = [];
@@ -56,12 +84,16 @@ const tags = generateTags(recipes);
 const barreDeRechercheIngredient = document.querySelector('.barreDeRechercheIngredients');
 const rechercheIngredient = document.querySelector('.ingredients');
 
-
+/**
+ * 
+ * @param {*} recipeArray tableau de recettes
+ * @returns un tableau de tags appliance sans doublons et trié et normalisé
+ */
 
 function generateAppareils(recipeArray) {
     let appareils = [];
     recipeArray.forEach((recipe) => {
-        appareils.push(recipe.appliance)
+        appareils.push(recipe.appliance.toLowerCase())
     });
     return [...new Set(appareils)];
 }
@@ -71,32 +103,28 @@ const appareils = generateAppareils(recipes);
 const barreDeRechercheAppareils = document.querySelector('.barreDeRechercheAppareils');
 const rechercheAppareils = document.querySelector('.appareils');
 
-
-
-
+/**
+ * 
+ * @param {*} recipeArray tableau de recettes
+ * @returns un tableau de tags ustensils sans doublons et trié et normalisé
+ */
 
 function generateUstensils(recipeArray) {
     let ustensils = [];
     recipeArray.forEach((recipe) => {
         recipe.ustensils.forEach(ustensil => {
-            ustensils.push(ustensil)
+            ustensils.push(ustensil.toLowerCase())
         });
     });
-    return [...new Set(ustensils)];
+    return [...new Set(ustensils)].sort(); 
 }
 
 const ustensils = generateUstensils(recipes);
-
 const barreDeRechercheUstensils = document.querySelector('.barreDeRechercheUstensiles');
 const rechercheUstensils = document.querySelector('.ustensiles');
 
-
-
 openClose()
 factoryCard(recipes);
-
-
-
 
 const tagsIngredients = document.querySelector('.ingredientsSelection');
 const tagsAppareils = document.querySelector('.appareilsSelection');
@@ -107,8 +135,8 @@ const tag = document.querySelector('.tag');
  * creation des tags
  */
 
-export function getInfoForTags(recipeList) {
-    console.log("test") 
+function getInfoForTags(recipeList) {
+    //console.log("test") 
     function generateIngList(recipeArray) {
         let ingList = [];
         recipeArray.forEach((recipe) => {
@@ -127,7 +155,7 @@ export function getInfoForTags(recipeList) {
             appList.push(recipe.appliance)
         });
         return [...new Set(appList)].sort();
-    }
+    } 
 
     const resultAppliance = generateAppList(recipeList);
 
@@ -135,7 +163,7 @@ export function getInfoForTags(recipeList) {
         let ustensileList = [];
         recipeArray.forEach((recipe) => {
             recipe.ustensils.forEach(ustensileObj => {
-                ustensileList.push(ustensileObj)
+                ustensileList.push(ustensileObj.toLowerCase())
             })
         });
         return [...new Set(ustensileList)].sort();
@@ -170,10 +198,25 @@ export function getInfoForTags(recipeList) {
                 closeTagModal.classList.add('closeTagModal');
                 tagModal.appendChild(closeTagModal);
                 tag.appendChild(tagModal);
-                closeTagModal.addEventListener('click', () => {
-                    document.querySelector('.tagModal').remove();
-                    factoryCard(recipes);
-                    getInfoForTags(recipes);
+                closeTagModal.addEventListener('click', (e) => {
+                    e.preventDefault()
+                    console.log(e);
+
+                    let myIndex = tagList.findIndex((tag) => tag.value === ing);
+                    if (myIndex !== -1) {
+                        tagList.splice(myIndex, 1);
+                    }
+                    console.log(tagList)
+
+                    e.target.parentNode.parentNode.remove()
+
+                    let filteredRecipes = [...recipes]; 
+                    tagList.forEach((tagObj) => {
+                        filteredRecipes = filterByTag(tagObj, filteredRecipes)
+                    })
+
+                    factoryCard(filteredRecipes);
+                    getInfoForTags(filteredRecipes);
                 });
             });
             const filtreTagIng = (recipeArr) => {
@@ -182,6 +225,8 @@ export function getInfoForTags(recipeList) {
 
             ingredientsForSelection.addEventListener('click', () => {
                 const result = filtreTagIng(recipeList, ing);
+                tagList.push({ type: 'ingredients', value: ing })
+                console.log(tagList);
                 factoryCard(result);
                 getInfoForTags(result);
                 console.log(result)
@@ -215,20 +260,33 @@ export function getInfoForTags(recipeList) {
                 closeTagModal.classList.add('closeTagModal');
                 tagModal.appendChild(closeTagModal);
                 tag.appendChild(tagModal);
-                closeTagModal.addEventListener('click', () => {
-                    document.querySelector('.tagModal1').remove();
-                    factoryCard(recipes);
-                    getInfoForTags(recipes);
+                closeTagModal.addEventListener('click', (e) => {
+                    e.preventDefault()
+                    console.log(e)
+
+                    let myIndex = tagList.findIndex((tag) => tag.value === app);
+                    if (myIndex !== -1) {
+                        tagList.splice(myIndex, 1);
+                    }
+                    console.log(tagList)
+
+                    e.target.parentNode.parentNode.remove()
+
+                    let filteredRecipes = [...recipes]; 
+                    tagList.forEach((tagObj) => {
+                        filteredRecipes = filterByTag(tagObj, filteredRecipes)
+                    })
+
+                    factoryCard(filteredRecipes);
+                    getInfoForTags(filteredRecipes);
                 });
-
-                tagList.push({type: "app", value: app })
-
 
             });
             const filtreTagApp = (recipeArr, requete) => {
                 return recipeArr.filter(recipe => recipe.appliance.includes(requete));
             }
             applianceForSelection.addEventListener('click', () => {
+                tagList.push({ type: 'appliance', value: app })
                 const result = filtreTagApp(recipeList, app);
                 factoryCard(result);
                 getInfoForTags(result);
@@ -263,19 +321,35 @@ export function getInfoForTags(recipeList) {
                 closeTagModal.classList.add('closeTagModal');
                 tagModal.appendChild(closeTagModal);
                 tag.appendChild(tagModal);
-                closeTagModal.addEventListener('click', () => {
-                    document.querySelector('.tagModal2').remove();
-                    factoryCard(recipes);
-                    getInfoForTags(recipes);
+                closeTagModal.addEventListener('click', (e) => {
+                    e.preventDefault()
+                    console.log(e)
+
+                    let myIndex = tagList.findIndex((tag) => tag.value === ustensils);
+                    if (myIndex !== -1) {
+                        tagList.splice(myIndex, 1);
+                    }
+                    console.log(tagList)
+
+                    e.target.parentNode.parentNode.remove()
+
+                    let filteredRecipes = [...recipes]; 
+                    tagList.forEach((tagObj) => {
+                        filteredRecipes = filterByTag(tagObj, filteredRecipes)
+                    })
+
+                    factoryCard(filteredRecipes);
+                    getInfoForTags(filteredRecipes);
                 });
             });
-            
 
-            const filtreTagUst = (recipeArr, requete) => {
-                return recipeArr.filter(recipe => recipe.ustensils.includes(requete));
+
+            const filtreTagUst = (recipeArr) => {
+                return recipeArr.filter(recipe => recipe.ustensils.some(ust => ust.toLowerCase() === ustensils.toLowerCase()));
             }
 
             ustensilsForSelection.addEventListener('click', () => {
+                tagList.push({ type: 'ustensils', value: ustensils })
                 const result = filtreTagUst(recipeList, ustensils);
                 factoryCard(result);
                 getInfoForTags(result);
@@ -287,6 +361,10 @@ export function getInfoForTags(recipeList) {
     getUstensilsForTags(resultUstensile);
     getApplianceForTags(resultAppliance);
     getIngredientsForTags(resultIngredient);
+
+    /**
+     * recherche par ingredients
+     */
 
     rechercheIngredient.addEventListener('click', () => {
         barreDeRechercheIngredient.style.display = 'block';
@@ -300,6 +378,10 @@ export function getInfoForTags(recipeList) {
         });
     });
 
+    /**
+     * recherche par appareils
+     */
+
     rechercheAppareils.addEventListener('click', () => {
         barreDeRechercheAppareils.style.display = 'block';
         barreDeRechercheAppareils.addEventListener('input', () => {
@@ -311,6 +393,10 @@ export function getInfoForTags(recipeList) {
             }
         });
     });
+
+    /**
+     * recherche par ustensiles
+     */
 
     rechercheUstensils.addEventListener('click', () => {
         barreDeRechercheUstensils.style.display = 'block';
@@ -325,8 +411,37 @@ export function getInfoForTags(recipeList) {
     });
 }
 
-
+ 
 
 
 
 getInfoForTags(recipes);
+
+/**
+ * 
+ * @param {*} tagObj tag selectionné
+ * @param {*} recipeArr tableau de recettes
+ * @returns filtre les recettes par tag
+ */
+
+function filterByTag(tagObj, recipeArr) {
+
+    let result = 0;
+
+switch (tagObj.type) {
+    case INGREDIENTS:
+        result = recipeArr.filter(recipe => recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase() === tagObj.value.toLowerCase()))
+        break;
+    case APPLIANCE:
+        result = recipeArr.filter(recipe => recipe.appliance.toLowerCase() === tagObj.value.toLowerCase())
+        break;
+    case USTENSILS:
+        result = recipeArr.filter(recipe => recipe.ustensils.some(ust => ust.toLowerCase() === tagObj.value.toLowerCase()))
+        break;
+    default:
+        break;
+}
+    return result
+}
+
+// console.log(filterByTag({type: "ingredients", value: "Poulet"}, recipes)) 
