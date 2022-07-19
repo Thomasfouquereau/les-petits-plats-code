@@ -28,7 +28,13 @@ const barreDeRecherche = document.querySelector('.barreDeRecherche');
  */
 
 const filtreTexte = (arr, requete) => {
-    return arr.filter(el => el.toLowerCase().indexOf(requete.toLowerCase()) !== -1);
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i].toLowerCase().indexOf(requete) === -1) {
+            arr.splice(i, 1);
+            i--;
+        }
+    }
+    return arr;
 }
 
 /**
@@ -39,7 +45,21 @@ const filtreTexte = (arr, requete) => {
  */
 
 const filtreTexte2 = (recipeArr, requete) => {
-    return recipeArr.filter(recipe => recipe.name.toLowerCase().includes(requete.toLowerCase()) || recipe.description.toLowerCase().includes(requete.toLowerCase()) || recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(requete.toLowerCase())));
+    let arr = [...recipeArr];
+    console.log(arr);
+    for (let i = 0; i < recipeArr.length; i++) {
+        if (arr[i].name.toLowerCase().indexOf(requete) === -1) {
+            arr.splice(i, 1);
+            i--;
+        } if (arr[i].description.toLowerCase().indexOf(requete) === -1) {
+            arr.splice(i, 1);
+            i--;
+        } if (arr[i].ingredients.some(ingredient => ingredient.ingredient.toLowerCase() === requete)) {
+            arr.splice(i, 1);
+            i--;
+        }
+    }
+    return arr;
 }
 
 /**
