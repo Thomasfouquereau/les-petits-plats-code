@@ -1,5 +1,5 @@
 /**
- * importe les recettes depuis le fichier recipes.js
+ * importe les recettes depuis le fichier recipes.js ok
  */
 import { recipes } from '../data/recipes.js';
 /**
