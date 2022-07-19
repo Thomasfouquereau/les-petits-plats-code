@@ -54,3 +54,11 @@
  });
  
  }
+
+//  document.addEventListener("click", function(e) {
+//     const dropDownIng = document.querySelector(".rechercheIngredients");
+//     console.log(dropDownIng)
+//     if (!dropDownIng.contains(e.target)) {
+//         alert("OUT")
+//     }
+//  })

@@ -7,6 +7,7 @@ const cardContainer = document.querySelector('.cardRecette');
 
  export function factoryCard(recipeArray) {
     cardContainer.innerHTML = "";
+    console.log(recipeArray);
     recipeArray.forEach(element => {
 
         /**
