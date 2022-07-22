@@ -45,18 +45,11 @@ const filtreTexte = (arr, requete) => {
  */
 
 const filtreTexte2 = (recipeArr, requete) => {
-    let arr = [...recipeArr];
+    let arr = [];
     console.log(arr);
     for (let i = 0; i < recipeArr.length; i++) {
-        if (arr[i].name.toLowerCase().indexOf(requete) === -1) {
-            arr.splice(i, 1);
-            i--;
-        } if (arr[i].description.toLowerCase().indexOf(requete) === -1) {
-            arr.splice(i, 1);
-            i--;
-        } if (arr[i].ingredients.some(ingredient => ingredient.ingredient.toLowerCase() === requete)) {
-            arr.splice(i, 1);
-            i--;
+        if (recipeArr[i].name.toLowerCase().includes(requete) || recipeArr[i].description.toLowerCase().includes(requete) || recipeArr[i].ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(requete) )) {
+            arr.push(recipeArr[i]);
         }
     }
     return arr;
