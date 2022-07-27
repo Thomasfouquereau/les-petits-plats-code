@@ -11,7 +11,6 @@ import { factoryCard } from '../scripts/factory/factoryCard.js';
  */
 import { openClose } from './utils/closeOpen.js';
 import { INGREDIENTS, APPLIANCE, USTENSILS } from "./utils/const.js";
-
 /**
  * @param {Array} recipeArray cree un array des recettes
  */
@@ -51,7 +50,6 @@ function recherche(recherche) {
     recherche.addEventListener('input', () => {
         if (recherche.value.length >= 3) {
             resultat = filtreTexte2(recipes, recherche.value);
-            // tagList.push({ type: 'resultat', value: recherche.value })
             factoryCard(resultat);
             getInfoForTags(resultat)
             console.log(tagList);
@@ -60,10 +58,6 @@ function recherche(recherche) {
             }
             return resultat
         } if (recherche.value.length <= 2) {
-            // let myIndex = tagList.findIndex((tag) => tag.value === recherche.value);
-            // if (myIndex !== -1) {
-            //     tagList.splice(myIndex, 1);
-            // }
             resultat = [...recipes]
             factoryCard(resultat);
             getInfoForTags(resultat)
@@ -204,7 +198,7 @@ function getInfoForTags(recipeList) {
                 tagModal.appendChild(titleTagModal);
                 const closeTagModal = document.createElement('button');
                 const closeIcon = document.createElement('img');
-                closeIcon.setAttribute('src', '../assets/Vector close.svg');
+                closeIcon.setAttribute('src', './assets/Vector close.svg');
                 closeTagModal.appendChild(closeIcon);
                 closeTagModal.classList.add('closeTagModal');
                 tagModal.appendChild(closeTagModal);
